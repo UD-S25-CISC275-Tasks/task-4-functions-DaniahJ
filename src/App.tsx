@@ -14,13 +14,13 @@ interface Person {
 }
 
 const people: Person[] = [
-    { name: "Alice", age: 25 },
+    { name: "Alice", age: 20 },
     { name: "Bob", age: 30 },
-    { name: "Charlie", age: 35 },
+    { name: "Charlie", age: 31 },
 ];
 
 const updatedPeople = people.map((person) =>
-    person.name === "Alice" ? { ...person, age: 28 } : person,
+    person.name === "Alice" ? { ...person, age: 20 } : person,
 );
 const filteredPeople = people.filter((person) => person.age > 25);
 
