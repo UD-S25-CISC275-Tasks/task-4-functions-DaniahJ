@@ -1,7 +1,7 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
 
-// Import functions from your modules
+
 import { add, subtract, multiply } from "./functions";
 import { sumArrays, removeLowNumbers } from "./arrays";
 import { makeQuiz, addQuestion, getPublishedQuestions, Quiz } from "./nested";
@@ -22,28 +22,24 @@ const App: React.FC = () => {
     useEffect(() => {
         console.log("🔹 Function Tests 🔹");
 
-        // 📌 Basic Math Operations (from functions.ts)
         console.log("Addition (3 + 5):", add(3, 5));
         console.log("Subtraction (10 - 4):", subtract(10, 4));
         console.log("Multiplication (6 * 7):", multiply(6, 7));
 
-        // 📌 Array Operations (from arrays.ts)
         console.log("Sum Arrays:", sumArrays([1, 2, 3], [4, 5, 6]));
         console.log(
             "Filter Numbers >= 10:",
             removeLowNumbers([5, 10, 15, 2], 10),
         );
 
-        // 📌 Student Tests (from objects.ts)
         console.log("Initial Student:", student);
         setStudent((prevStudent) => {
             if (!prevStudent.scores.includes(95)) {
-                return addScore(prevStudent, 95); // ✅ Prevents duplicate 95s
+                return addScore(prevStudent, 95);
             }
             return prevStudent;
         });
 
-        // 📌 Quiz Operations (from nested.ts)
         console.log("Initial Quiz:", quiz);
         setQuiz((prevQuiz) => {
             if (!prevQuiz.questions.some((q) => q.text === "What is 5*5?")) {
@@ -51,12 +47,12 @@ const App: React.FC = () => {
                     id: 3,
                     text: "What is 5*5?",
                     published: true,
-                }); // ✅ Prevents duplicate question
+                });
             }
             return prevQuiz;
         });
         console.log("Published Questions:", getPublishedQuestions(quiz));
-    }, [quiz, student]); // ✅ Now includes dependencies, avoiding warning
+    }, [quiz, student]);
 
     return (
         <div className="App">
