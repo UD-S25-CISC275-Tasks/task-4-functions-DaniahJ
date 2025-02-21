@@ -1,66 +1,60 @@
-import React from "react";
 import "./App.css";
+import React, { useEffect, useState, useRef } from "react";
 
-// Array operations
-const numbers = [1, 2, 3, 4, 5, 6];
-const doubledNumbers = numbers.map((num) => num * 2);
-const filteredNumbers = numbers.filter((num) => num % 2 === 0);
-const summedNumbers = numbers.reduce((sum, num) => sum + num, 0);
+// Import functions from your modules
+import { add, subtract, multiply } from "./functions";
+import { sumArrays, removeLowNumbers } from "./arrays";
+import { makeQuiz, addQuestion, getPublishedQuestions, Quiz } from "./nested";
+import { createStudent, addScore, Student } from "./objects";
 
-// Object operations
-interface Person {
-    name: string;
-    age: number;
-}
+const App: React.FC = () => {
+    const [quiz, setQuiz] = useState<Quiz>(
+        makeQuiz("Math Quiz", [
+            { id: 1, text: "What is 2+2?", published: true },
+            { id: 2, text: "What is 10/2?", published: false },
+        ]),
+    );
 
-const people: Person[] = [
-    { name: "Alice", age: 20 },
-    { name: "Bob", age: 30 },
-    { name: "Charlie", age: 31 },
-];
+    const [student, setStudent] = useState<Student>(
+        createStudent("1", "Alice", [80, 90]),
+    );
 
-const updatedPeople = people.map((person) =>
-    person.name === "Alice" ? { ...person, age: 20 } : person,
-);
-const filteredPeople = people.filter((person) => person.age > 25);
+    // ✅ Prevent useEffect from running twice
+    const effectRan = useRef(false);
 
-// Nested data operations
-interface Movie {
-    title: string;
-    year: number;
-    genres: string[];
-}
+    useEffect(() => {
+        if (effectRan.current) return;
+        effectRan.current = true;
 
-interface MovieCollection {
-    name: string;
-    movies: Movie[];
-}
+        console.log("🔹 Function Tests 🔹");
 
-const movieCollection: MovieCollection = {
-    name: "Favorite Movies",
-    movies: [
-        { title: "Inception", year: 2010, genres: ["Sci-Fi", "Thriller"] },
-        { title: "The Matrix", year: 1999, genres: ["Sci-Fi", "Action"] },
-    ],
-};
+        // 📌 Basic Math Operations (from functions.ts)
+        console.log("Addition (3 + 5):", add(3, 5));
+        console.log("Subtraction (10 - 4):", subtract(10, 4));
+        console.log("Multiplication (6 * 7):", multiply(6, 7));
 
-const newMovie: Movie = {
-    title: "Interstellar",
-    year: 2014,
-    genres: ["Sci-Fi", "Drama"],
-};
-const updatedMovieCollection = {
-    ...movieCollection,
-    movies: [...movieCollection.movies, newMovie],
-};
+        // 📌 Array Operations (from arrays.ts)
+        console.log("Sum Arrays:", sumArrays([1, 2, 3], [4, 5, 6]));
+        console.log(
+            "Filter Numbers >= 10:",
+            removeLowNumbers([5, 10, 15, 2], 10),
+        );
 
-function App(): React.JSX.Element {
-    console.log("Doubled Numbers:", doubledNumbers);
-    console.log("Filtered Even Numbers:", filteredNumbers);
-    console.log("Summed Numbers:", summedNumbers);
-    console.log("Updated People:", updatedPeople);
-    console.log("Filtered People:", filteredPeople);
-    console.log("Updated Movie Collection:", updatedMovieCollection);
+        // student Tests (from objects.ts)
+        console.log("Initial Student:", student);
+        setStudent((prevStudent) => addScore(prevStudent, 95));
+
+        //Quiz Operations (from nested.ts)
+        console.log("Initial Quiz:", quiz);
+        setQuiz((prevQuiz) =>
+            addQuestion(prevQuiz, {
+                id: 3,
+                text: "What is 5*5?",
+                published: true,
+            }),
+        );
+        console.log("Published Questions:", getPublishedQuestions(quiz));
+    }, []);
 
     return (
         <div className="App">
@@ -68,8 +62,21 @@ function App(): React.JSX.Element {
                 UD CISC275 with React Hooks and TypeScript
             </header>
             <p>Check the console for function outputs.</p>
+
+            <h2>Quiz Questions</h2>
+            <ul>
+                {quiz.questions.map((q) => (
+                    <li key={q.id}>
+                        {q.text} - {q.published ? "✅" : "❌"}
+                    </li>
+                ))}
+            </ul>
+
+            <h2>Student Info</h2>
+            <p>Name: {student.name}</p>
+            <p>Scores: {student.scores.join(", ")}</p>
         </div>
     );
-}
+};
 
 export default App;
