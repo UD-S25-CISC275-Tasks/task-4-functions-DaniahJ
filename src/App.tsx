@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 
 // Import functions from your modules
 import { add, subtract, multiply } from "./functions";
@@ -19,13 +19,7 @@ const App: React.FC = () => {
         createStudent("1", "Alice", [80, 90]),
     );
 
-    // ✅ Prevent useEffect from running twice
-    const effectRan = useRef(false);
-
     useEffect(() => {
-        if (effectRan.current) return;
-        effectRan.current = true;
-
         console.log("🔹 Function Tests 🔹");
 
         // 📌 Basic Math Operations (from functions.ts)
@@ -40,21 +34,29 @@ const App: React.FC = () => {
             removeLowNumbers([5, 10, 15, 2], 10),
         );
 
-        // student Tests (from objects.ts)
+        // 📌 Student Tests (from objects.ts)
         console.log("Initial Student:", student);
-        setStudent((prevStudent) => addScore(prevStudent, 95));
+        setStudent((prevStudent) => {
+            if (!prevStudent.scores.includes(95)) {
+                return addScore(prevStudent, 95); // ✅ Prevents duplicate 95s
+            }
+            return prevStudent;
+        });
 
-        //Quiz Operations (from nested.ts)
+        // 📌 Quiz Operations (from nested.ts)
         console.log("Initial Quiz:", quiz);
-        setQuiz((prevQuiz) =>
-            addQuestion(prevQuiz, {
-                id: 3,
-                text: "What is 5*5?",
-                published: true,
-            }),
-        );
+        setQuiz((prevQuiz) => {
+            if (!prevQuiz.questions.some((q) => q.text === "What is 5*5?")) {
+                return addQuestion(prevQuiz, {
+                    id: 3,
+                    text: "What is 5*5?",
+                    published: true,
+                }); // ✅ Prevents duplicate question
+            }
+            return prevQuiz;
+        });
         console.log("Published Questions:", getPublishedQuestions(quiz));
-    }, []);
+    }, [quiz, student]); // ✅ Now includes dependencies, avoiding warning
 
     return (
         <div className="App">
