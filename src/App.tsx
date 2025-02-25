@@ -1,80 +1,33 @@
+import React from "react";
 import "./App.css";
-import React, { useEffect, useState } from "react";
+import {
+    add,
+    subtract,
+    multiply,
+    divide,
+    isEven,
+    greet,
+    countFangs,
+} from "./functions";
 
-
-import { add, subtract, multiply } from "./functions";
-import { sumArrays, removeLowNumbers } from "./arrays";
-import { makeQuiz, addQuestion, getPublishedQuestions, Quiz } from "./nested";
-import { createStudent, addScore, Student } from "./objects";
-
-const App: React.FC = () => {
-    const [quiz, setQuiz] = useState<Quiz>(
-        makeQuiz("Math Quiz", [
-            { id: 1, text: "What is 2+2?", published: true },
-            { id: 2, text: "What is 10/2?", published: false },
-        ]),
-    );
-
-    const [student, setStudent] = useState<Student>(
-        createStudent("1", "Alice", [80, 90]),
-    );
-
-    useEffect(() => {
-        console.log("🔹 Function Tests 🔹");
-
-        console.log("Addition (3 + 5):", add(3, 5));
-        console.log("Subtraction (10 - 4):", subtract(10, 4));
-        console.log("Multiplication (6 * 7):", multiply(6, 7));
-
-        console.log("Sum Arrays:", sumArrays([1, 2, 3], [4, 5, 6]));
-        console.log(
-            "Filter Numbers >= 10:",
-            removeLowNumbers([5, 10, 15, 2], 10),
-        );
-
-        console.log("Initial Student:", student);
-        setStudent((prevStudent) => {
-            if (!prevStudent.scores.includes(95)) {
-                return addScore(prevStudent, 95);
-            }
-            return prevStudent;
-        });
-
-        console.log("Initial Quiz:", quiz);
-        setQuiz((prevQuiz) => {
-            if (!prevQuiz.questions.some((q) => q.text === "What is 5*5?")) {
-                return addQuestion(prevQuiz, {
-                    id: 3,
-                    text: "What is 5*5?",
-                    published: true,
-                });
-            }
-            return prevQuiz;
-        });
-        console.log("Published Questions:", getPublishedQuestions(quiz));
-    }, [quiz, student]);
+function App(): React.JSX.Element {
+    console.log("Addition (5 + 3):", add(5, 3));
+    console.log("Subtraction (10 - 4):", subtract(10, 4));
+    console.log("Multiplication (7 * 2):", multiply(7, 2));
+    console.log("Division (8 / 2):", divide(8, 2));
+    console.log("Division by Zero (10 / 0):", divide(10, 0));
+    console.log("Is 6 even?:", isEven(6));
+    console.log("Greeting:", greet("Daniah"));
+    console.log("Count vampire fangs (3 vampires):", countFangs(3));
 
     return (
         <div className="App">
             <header className="App-header">
-                UD CISC275 with React Hooks and TypeScript
+                CISC275 - Task 4: Functions in TypeScript
             </header>
             <p>Check the console for function outputs.</p>
-
-            <h2>Quiz Questions</h2>
-            <ul>
-                {quiz.questions.map((q) => (
-                    <li key={q.id}>
-                        {q.text} - {q.published ? "✅" : "❌"}
-                    </li>
-                ))}
-            </ul>
-
-            <h2>Student Info</h2>
-            <p>Name: {student.name}</p>
-            <p>Scores: {student.scores.join(", ")}</p>
         </div>
     );
-};
+}
 
 export default App;
