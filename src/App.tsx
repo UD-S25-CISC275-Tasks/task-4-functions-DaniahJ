@@ -9,6 +9,7 @@ import {
 } from "./functions";
 
 function App() {
+   
     console.log("Convert Fahrenheit to Celsius:", fahrenheitToCelsius(100));
     console.log("Sum of positive numbers:", add3(3, -1, 5));
     console.log("Shouting:", shout("hello"));
